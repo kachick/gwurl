@@ -27,6 +27,7 @@
               dprint
               typos
               go-task
+              go_1_22
             ];
           };
       }
