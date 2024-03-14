@@ -4,6 +4,9 @@
   "[nix]": {
     "editor.defaultFormatter": "jnoortheen.nix-ide"
   },
+  "[go]": {
+    "editor.defaultFormatter": "golang.go"
+  },
   "nix.enableLanguageServer": true,
   "nix.serverPath": "nil",
   "nix.serverSettings": {

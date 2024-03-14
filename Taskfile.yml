@@ -7,11 +7,15 @@ tasks:
     deps:
       - task: fmt
       - task: lint
+      - task: build
       - task: test
   check:
     deps:
       - task: test
       - task: lint
+  build:
+    cmds:
+      - go build ./...
   test:
     cmds:
       - echo 'Update here'
@@ -31,3 +35,4 @@ tasks:
       - task --version
       - dprint --version
       - typos --version
+      - go version
