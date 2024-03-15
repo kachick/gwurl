@@ -13,8 +13,12 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        updaterVersion =
+          if (self ? shortRev)
+          then self.shortRev
+          else "dev";
       in
-      {
+      rec {
         devShells.default = with pkgs;
           mkShell {
             buildInputs = [
@@ -30,6 +34,25 @@
               go_1_22
             ];
           };
+
+        packages.gwurl = pkgs.buildGo122Module {
+          pname = "gwurl";
+          version = updaterVersion;
+          src = pkgs.lib.cleanSource self;
+
+          # When updating go.mod or go.sum, update this sha together as following
+          # vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+          # (`pkgs.lib.fakeSha256` returns invalid string in thesedays... :<)
+          vendorHash = "sha256-sODHIjL/iaWzH0iarh8Y9N7hZGKznbUxwE5xOPwEFvc=";
+        };
+
+        packages.default = packages.gwurl;
+
+        # `nix run`
+        apps.default = {
+          type = "app";
+          program = "${packages.gwurl}/bin/gwurl";
+        };
       }
     );
 }
