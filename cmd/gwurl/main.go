@@ -4,9 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
-	"net/url"
 	"os"
-	"slices"
 
 	"github.com/kachick/gwurl/internal/googleapi"
 	"github.com/kachick/gwurl/internal/taggedurl"
@@ -71,16 +69,12 @@ $ gwurl --version
 		log.Fatalf("Cannot ask to Google API: %+v", err)
 	}
 
-	installerActionIdx := slices.IndexFunc(resp.App.UpdateCheck.Manifest.Actions, func(a googleapi.Action) bool {
-		return a.Event == "install"
-	})
-	installerFilename := resp.App.UpdateCheck.Manifest.Actions[installerActionIdx].Run
+	permalinks, err := googleapi.GetPermalinks(resp)
+	if err != nil {
+		log.Fatalf("Cannot ask to Google API: %+v", err)
+	}
 
-	for _, u := range resp.App.UpdateCheck.Urls {
-		permalink, err := url.JoinPath(u.Codebase, installerFilename)
-		if err != nil {
-			log.Fatalf("Cannot build final link with the result: %+v", err)
-		}
-		fmt.Println(permalink)
+	for _, p := range permalinks {
+		fmt.Println(p)
 	}
 }
