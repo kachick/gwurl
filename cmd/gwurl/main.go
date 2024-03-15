@@ -203,8 +203,6 @@ $ gwurl --version
 		log.Fatalf("Cannot ask to Google API: %+v", err)
 	}
 
-	// fmt.Printf("%+v\n", resp)
-
 	installerActionIdx := slices.IndexFunc(resp.App.UpdateCheck.Manifest.Actions, func(a Action) bool {
 		return a.Event == "install"
 	})
