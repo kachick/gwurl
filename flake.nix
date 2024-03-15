@@ -43,7 +43,7 @@
           # When updating go.mod or go.sum, update this sha together as following
           # vendorHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
           # (`pkgs.lib.fakeSha256` returns invalid string in thesedays... :<)
-          vendorHash = "sha256-sODHIjL/iaWzH0iarh8Y9N7hZGKznbUxwE5xOPwEFvc=";
+          vendorHash = "sha256-hC1eg2mC3Qp0QGFj3pTMIOyjrMV9Yx+hqvupxUG17OQ=";
         };
 
         packages.default = packages.gwurl;

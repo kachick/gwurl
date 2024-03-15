@@ -18,7 +18,10 @@ tasks:
       - go build ./...
   test:
     cmds:
-      - echo 'Update here'
+      - go test ./...
+  test-all:
+    cmds:
+      - go test -tags=apitest ./...
   fmt:
     cmds:
       - dprint fmt
