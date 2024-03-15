@@ -3,16 +3,23 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 	"log"
 	"net/url"
 	"os"
 	"path"
 	"slices"
 	"strings"
+
+	"bytes"
+	"encoding/xml"
+	"net/http"
+
+	"golang.org/x/xerrors"
 )
 
 var (
-	// Used in goreleaser
+	// Might be used in goreleaser
 	version = "dev"
 	commit  = "none"
 
@@ -27,17 +34,93 @@ type TaggedURL struct {
 	filename   string
 }
 
-func ParseTaggedURL(taggedUrl string) TaggedURL {
+type Action struct {
+	Event string `xml:"event,attr"`
+	Run   string `xml:"run,attr"`
+}
+
+// NOTE: Use `InnerXML string `xml:",innerxml"“ to inspect unknown fields: https://stackoverflow.com/a/38509722
+type Response struct {
+	XMLName xml.Name `xml:"response"`
+	App     struct {
+		Status      string `xml:"status"`
+		UpdateCheck struct {
+			Manifest struct {
+				Version string   `xml:"version,attr"`
+				Actions []Action `xml:"actions>action"`
+			} `xml:"manifest"`
+
+			Urls []struct {
+				Codebase string `xml:"codebase,attr"`
+			} `xml:"urls>url"`
+		} `xml:"updatecheck"`
+	} `xml:"app"`
+}
+
+type GoogleApiOs struct {
+	platform     string
+	version      string
+	architecture string
+}
+
+type GoogleApiApp struct {
+	appid string
+	ap    string
+}
+
+func BuildGoogleApiPostXml(apiOs GoogleApiOs, apiApp GoogleApiApp) string {
+	return fmt.Sprintf(`<?xml version="1.0" encoding="UTF-8"?>
+<request protocol="3.0">
+  <os platform="%s" version="%s" arch="%s" />
+  <app appid="%s" version="" ap="%s">
+    <updatecheck />
+  </app>
+</request>
+`, apiOs.platform, apiOs.version, apiOs.architecture, apiApp.appid, apiApp.ap)
+}
+
+func PostGoogleAPI(apiOs GoogleApiOs, apiApp GoogleApiApp) (Response, error) {
+	body := []byte(BuildGoogleApiPostXml(apiOs, apiApp))
+
+	req, err := http.NewRequest("POST", "https://update.googleapis.com/service/update2", bytes.NewBuffer(body))
+	if err != nil {
+		return Response{}, xerrors.Errorf("Error creating request: %w", err)
+	}
+
+	req.Header.Set("Content-Type", "application/xml; charset=utf-8")
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return Response{}, xerrors.Errorf("Error posting request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return Response{}, xerrors.Errorf("Error reading response body: %w", err)
+	}
+
+	var responseObject Response
+	err = xml.Unmarshal(respBody, &responseObject)
+	if err != nil {
+		return Response{}, xerrors.Errorf("Error unmarshalling response: %w", err)
+	}
+
+	return responseObject, nil
+}
+
+func ParseTaggedURL(likeTaggedUrl string) TaggedURL {
 	// [scheme:][//[userinfo@]host][/]path[?query][#fragment]
-	permalink, err := url.ParseRequestURI(taggedUrl)
+	taggedUrl, err := url.ParseRequestURI(likeTaggedUrl)
 	if err != nil {
 		log.Fatalf("Cannot parse given URL: %+v", err)
 	}
-	if !strings.HasSuffix(permalink.Host, "google.com") {
-		log.Fatalf("Given URL looks not a goole: %s", permalink.Host)
+	if !strings.HasSuffix(taggedUrl.Host, "google.com") {
+		log.Fatalf("Given URL looks not a goole: %s", taggedUrl.Host)
 	}
 
-	prefixWithQuery, filename := path.Split(permalink.Path)
+	prefixWithQuery, filename := path.Split(taggedUrl.Path)
 	// Intentioanlly avoiding path.Split for the getting nth element. Not the prefix and last
 	dirs := strings.Split(prefixWithQuery, "/")
 	qsi := slices.IndexFunc(dirs, func(dir string) bool { return strings.Contains(dir, "appguid") })
@@ -106,7 +189,32 @@ $ gwurl --version
 
 	taggedUrl := os.Args[1]
 	parsed := ParseTaggedURL(taggedUrl)
-
-	// fmt.Printf("%s, %s, %+v\n", appguid, ap, query)
 	fmt.Printf("%+v\n", parsed)
+
+	resp, err := PostGoogleAPI(GoogleApiOs{
+		platform:     "win",
+		version:      "10",
+		architecture: "x64",
+	}, GoogleApiApp{
+		appid: parsed.appguid,
+		ap:    parsed.ap,
+	})
+	if err != nil {
+		log.Fatalf("Cannot ask to Google API: %+v", err)
+	}
+
+	// fmt.Printf("%+v\n", resp)
+
+	installerActionIdx := slices.IndexFunc(resp.App.UpdateCheck.Manifest.Actions, func(a Action) bool {
+		return a.Event == "install"
+	})
+	installerFilename := resp.App.UpdateCheck.Manifest.Actions[installerActionIdx].Run
+
+	for _, u := range resp.App.UpdateCheck.Urls {
+		permalink, err := url.JoinPath(u.Codebase, installerFilename)
+		if err != nil {
+			log.Fatalf("Cannot build final link with the result: %+v", err)
+		}
+		fmt.Println(permalink)
+	}
 }
