@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
+	"slices"
 
 	"golang.org/x/xerrors"
 )
@@ -84,4 +86,24 @@ func PostGoogleAPI(apiOs GoogleApiOs, apiApp GoogleApiApp) (Response, error) {
 	}
 
 	return responseObject, nil
+}
+
+func GetPermalinks(resp Response) ([]string, error) {
+	installerActionIdx := slices.IndexFunc(resp.App.UpdateCheck.Manifest.Actions, func(a Action) bool {
+		return a.Event == "install"
+	})
+	if installerActionIdx < 0 {
+		return nil, xerrors.Errorf("api didn't return installer information: %v", installerActionIdx)
+	}
+	installerFilename := resp.App.UpdateCheck.Manifest.Actions[installerActionIdx].Run
+
+	permalinks := make([]string, 0, len(resp.App.UpdateCheck.Urls))
+	for _, u := range resp.App.UpdateCheck.Urls {
+		permalink, err := url.JoinPath(u.Codebase, installerFilename)
+		if err != nil {
+			return nil, xerrors.Errorf("Cannot build final link with the result: %w", err)
+		}
+		permalinks = append(permalinks, permalink)
+	}
+	return permalinks, nil
 }
