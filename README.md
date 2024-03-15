@@ -1,5 +1,6 @@
 # gwurl - "Google distributing Windows installer"'s URL
 
+[![CI - Go Status](https://github.com/kachick/gwurl/actions/workflows/ci-go.yml/badge.svg?branch=main)](https://github.com/kachick/gwurl/actions/workflows/ci-go.yml?query=branch%3Amain+)
 [![CI - Nix Status](https://github.com/kachick/gwurl/actions/workflows/ci-nix.yml/badge.svg?branch=main)](https://github.com/kachick/gwurl/actions/workflows/ci-nix.yml?query=branch%3Amain+)
 
 ## Usage
