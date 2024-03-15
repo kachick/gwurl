@@ -55,13 +55,13 @@ $ gwurl --version
 	if err != nil {
 		log.Fatalf("Cannot parse given URL: %+v", err)
 	}
-	fmt.Printf("%+v\n", parsed)
+	fmt.Printf("Given Tagged URL Inspection: %+v\n", parsed)
 
-	resp, err := googleapi.PostGoogleAPI(googleapi.GoogleApiOs{
+	resp, err := googleapi.PostGoogleAPI(googleapi.Os{
 		Platform:     "win",
 		Version:      "10",
 		Architecture: "x64",
-	}, googleapi.GoogleApiApp{
+	}, googleapi.App{
 		Appid: parsed.Appguid,
 		Ap:    parsed.Ap,
 	})

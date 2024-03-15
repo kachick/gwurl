@@ -57,15 +57,14 @@ func TestParseTaggedURL(t *testing.T) {
 
 			if err != nil {
 				if tc.ok {
-					t.Errorf("unexpected error happned: %v", err)
+					t.Fatalf("unexpected error happned: %v", err)
 				} else {
 					return
 				}
 			}
 
 			if !tc.ok {
-				t.Errorf("expected error did not happen")
-				return
+				t.Fatalf("expected error did not happen")
 			}
 
 			if diff := cmp.Diff(tc.want, parsed); diff != "" {

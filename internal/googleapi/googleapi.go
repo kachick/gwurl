@@ -3,7 +3,6 @@ package googleapi
 import (
 	"bytes"
 	"encoding/xml"
-	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -35,34 +34,47 @@ type Response struct {
 	} `xml:"app"`
 }
 
-type GoogleApiOs struct {
-	Platform     string
-	Version      string
-	Architecture string
+type Os struct {
+	Platform     string `xml:"platform,attr"`
+	Version      string `xml:"version,attr"`
+	Architecture string `xml:"arch,attr"`
 }
 
-type GoogleApiApp struct {
-	Appid string
-	Ap    string
+type App struct {
+	Appid       string   `xml:"appid,attr"`
+	Version     string   `xml:"version,attr"`
+	Ap          string   `xml:"ap,attr"`
+	UpdateCheck struct{} `xml:"updatecheck"`
 }
 
-func BuildGoogleApiPostXml(apiOs GoogleApiOs, apiApp GoogleApiApp) string {
-	return fmt.Sprintf(`<?xml version="1.0" encoding="UTF-8"?>
-<request protocol="3.0">
-  <os platform="%s" version="%s" arch="%s" />
-  <app appid="%s" version="" ap="%s">
-    <updatecheck />
-  </app>
-</request>
-`, apiOs.Platform, apiOs.Version, apiOs.Architecture, apiApp.Appid, apiApp.Ap)
+type Request struct {
+	XMLName  xml.Name `xml:"request"`
+	Protocol string   `xml:"protocol,attr"`
+	Os       Os       `xml:"os"`
+	App      App      `xml:"app"`
 }
 
-func PostGoogleAPI(apiOs GoogleApiOs, apiApp GoogleApiApp) (Response, error) {
-	body := []byte(BuildGoogleApiPostXml(apiOs, apiApp))
+func BuildGoogleApiPostXml(os Os, app App) ([]byte, error) {
+	full := []byte(xml.Header)
+	body, err := xml.Marshal(Request{
+		Protocol: "3.0",
+		Os:       os,
+		App:      app,
+	})
+	full = append(full, body...)
+
+	return full, err
+}
+
+func PostGoogleAPI(os Os, app App) (Response, error) {
+	body, err := BuildGoogleApiPostXml(os, app)
+	if err != nil {
+		return Response{}, xerrors.Errorf("Error creating request: %w", err)
+	}
 
 	req, err := http.NewRequest("POST", "https://update.googleapis.com/service/update2", bytes.NewBuffer(body))
 	if err != nil {
-		return Response{}, xerrors.Errorf("Error creating request: %w", err)
+		return Response{}, xerrors.Errorf("Error sending request: %w", err)
 	}
 
 	req.Header.Set("Content-Type", "application/xml; charset=utf-8")

@@ -14,13 +14,13 @@ import (
 func TestPostGoogleAPI(t *testing.T) {
 	testCases := []struct {
 		description string
-		input       GoogleApiApp
+		input       App
 		want        []string
 		ok          bool
 	}{
 		{
 			description: "Google Japanese IME",
-			input: GoogleApiApp{
+			input: App{
 				Appid: "{DDCCD2A9-025E-4142-BCEB-F467B88CF830}",
 				Ap:    "external-stable-universal",
 			},
@@ -36,7 +36,7 @@ func TestPostGoogleAPI(t *testing.T) {
 		},
 		{
 			description: "Google Chrome",
-			input: GoogleApiApp{
+			input: App{
 				Appid: "{8A69D345-D564-463C-AFF1-A69D9E530F96}",
 				Ap:    "x64-stable-statsdef_1",
 			},
@@ -52,7 +52,7 @@ func TestPostGoogleAPI(t *testing.T) {
 		},
 		{
 			description: "Unknown Prams",
-			input: GoogleApiApp{
+			input: App{
 				Appid: "foo",
 				Ap:    "bar",
 			},
@@ -63,15 +63,14 @@ func TestPostGoogleAPI(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.description, func(t *testing.T) {
-			resp, err := PostGoogleAPI(GoogleApiOs{
+			resp, err := PostGoogleAPI(Os{
 				Platform:     "win",
 				Version:      "10",
 				Architecture: "x64",
 			}, tc.input)
 			if err != nil {
 				if tc.ok {
-					t.Errorf("unexpected error happned: %v", err)
-					return
+					t.Fatalf("unexpected error happned: %v", err)
 				} else {
 					return
 				}
@@ -80,16 +79,14 @@ func TestPostGoogleAPI(t *testing.T) {
 			urls, err := GetPermalinks(resp)
 			if err != nil {
 				if tc.ok {
-					t.Errorf("unexpected error happned: %v", err)
-					return
+					t.Fatalf("unexpected error happned: %v", err)
 				} else {
 					return
 				}
 			}
 
 			if !tc.ok {
-				t.Errorf("expected error did not happen")
-				return
+				t.Fatalf("expected error did not happen")
 			}
 
 			dictComp := func(a string, b string) bool {
