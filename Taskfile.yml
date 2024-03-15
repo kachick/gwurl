@@ -18,7 +18,7 @@ tasks:
       - go build ./...
   test:
     cmds:
-      - echo 'Update here'
+      - go test ./...
   fmt:
     cmds:
       - dprint fmt

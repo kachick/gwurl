@@ -53,7 +53,10 @@ $ gwurl --version
 	}
 
 	taggedUrl := os.Args[1]
-	parsed := taggedurl.ParseTaggedURL(taggedUrl)
+	parsed, err := taggedurl.ParseTaggedURL(taggedUrl)
+	if err != nil {
+		log.Fatalf("Cannot parse given URL: %+v", err)
+	}
 	fmt.Printf("%+v\n", parsed)
 
 	resp, err := googleapi.PostGoogleAPI(googleapi.GoogleApiOs{
