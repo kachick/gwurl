@@ -9,13 +9,11 @@ on:
       - '.github/workflows/ci-go.yml'
       - '**.go'
       - 'go.*'
-      - 'testdata/**'
   pull_request:
     paths:
       - '.github/workflows/ci-go.yml'
       - '**.go'
       - 'go.*'
-      - 'testdata/**'
   workflow_dispatch:
 
 jobs:
