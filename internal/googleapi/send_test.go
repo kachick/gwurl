@@ -51,7 +51,7 @@ func TestPostGoogleAPI(t *testing.T) {
 			ok: true,
 		},
 		{
-			description: "Unknown Prams",
+			description: "Unknown parameters",
 			input: App{
 				Appid: "foo",
 				Ap:    "bar",
