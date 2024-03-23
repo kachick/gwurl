@@ -51,6 +51,21 @@ func TestPostGoogleAPI(t *testing.T) {
 			ok: true,
 		},
 		{
+			description: "Google Drive",
+			input: App{
+				Appid: "{6BBAE539-2232-434A-A4E5-9A33560C6283}",
+			},
+			want: []string{
+				"http://edgedl.me.gvt1.com/edgedl/release2/chrome/adno2uyj7yhsdmrqsizskbq3um2q_122.0.6261.129/122.0.6261.129_chrome_installer.exe",
+				"https://edgedl.me.gvt1.com/edgedl/release2/chrome/adno2uyj7yhsdmrqsizskbq3um2q_122.0.6261.129/122.0.6261.129_chrome_installer.exe",
+				"http://dl.google.com/release2/chrome/adno2uyj7yhsdmrqsizskbq3um2q_122.0.6261.129/122.0.6261.129_chrome_installer.exe",
+				"https://dl.google.com/release2/chrome/adno2uyj7yhsdmrqsizskbq3um2q_122.0.6261.129/122.0.6261.129_chrome_installer.exe",
+				"http://www.google.com/dl/release2/chrome/adno2uyj7yhsdmrqsizskbq3um2q_122.0.6261.129/122.0.6261.129_chrome_installer.exe",
+				"https://www.google.com/dl/release2/chrome/adno2uyj7yhsdmrqsizskbq3um2q_122.0.6261.129/122.0.6261.129_chrome_installer.exe",
+			},
+			ok: true,
+		},
+		{
 			description: "Unknown Prams",
 			input: App{
 				Appid: "foo",
