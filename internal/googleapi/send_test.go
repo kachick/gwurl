@@ -70,7 +70,7 @@ func TestPostGoogleAPI(t *testing.T) {
 			}, tc.input)
 			if err != nil {
 				if tc.ok {
-					t.Fatalf("unexpected error happned: %v", err)
+					t.Fatalf("unexpected error happened: %v", err)
 				} else {
 					return
 				}
@@ -79,7 +79,7 @@ func TestPostGoogleAPI(t *testing.T) {
 			urls, err := GetPermalinks(resp)
 			if err != nil {
 				if tc.ok {
-					t.Fatalf("unexpected error happned: %v", err)
+					t.Fatalf("unexpected error happened: %v", err)
 				} else {
 					return
 				}
