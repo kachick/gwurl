@@ -4,18 +4,16 @@
 package googleapi
 
 import (
-	"strings"
+	"regexp"
+	"slices"
 	"testing"
-
-	"github.com/google/go-cmp/cmp"
-	"github.com/google/go-cmp/cmp/cmpopts"
 )
 
 func TestPostGoogleAPI(t *testing.T) {
 	testCases := []struct {
 		description string
 		input       App
-		want        []string
+		want        string
 		ok          bool
 	}{
 		{
@@ -24,15 +22,8 @@ func TestPostGoogleAPI(t *testing.T) {
 				Appid: "{DDCCD2A9-025E-4142-BCEB-F467B88CF830}",
 				Ap:    "external-stable-universal",
 			},
-			want: []string{
-				"http://edgedl.me.gvt1.com/edgedl/release2/kjspmop3m4hu2sbbaotsynsgja_2.29.5370.0/GoogleJapaneseInput64-2.29.5370.0.msi",
-				"https://edgedl.me.gvt1.com/edgedl/release2/kjspmop3m4hu2sbbaotsynsgja_2.29.5370.0/GoogleJapaneseInput64-2.29.5370.0.msi",
-				"http://dl.google.com/release2/kjspmop3m4hu2sbbaotsynsgja_2.29.5370.0/GoogleJapaneseInput64-2.29.5370.0.msi",
-				"https://dl.google.com/release2/kjspmop3m4hu2sbbaotsynsgja_2.29.5370.0/GoogleJapaneseInput64-2.29.5370.0.msi",
-				"http://www.google.com/dl/release2/kjspmop3m4hu2sbbaotsynsgja_2.29.5370.0/GoogleJapaneseInput64-2.29.5370.0.msi",
-				"https://www.google.com/dl/release2/kjspmop3m4hu2sbbaotsynsgja_2.29.5370.0/GoogleJapaneseInput64-2.29.5370.0.msi",
-			},
-			ok: true,
+			want: "https?://[a-zA-Z0-9/.-]+_[0-9.]+/GoogleJapaneseInput[a-zA-Z0-9/.-]+\\.(exe|msi)",
+			ok:   true,
 		},
 		{
 			description: "Google Chrome",
@@ -40,29 +31,30 @@ func TestPostGoogleAPI(t *testing.T) {
 				Appid: "{8A69D345-D564-463C-AFF1-A69D9E530F96}",
 				Ap:    "x64-stable-statsdef_1",
 			},
-			want: []string{
-				"http://edgedl.me.gvt1.com/edgedl/release2/chrome/acerbjgcqxawfznuerhowwbwv36a_124.0.6367.156/124.0.6367.156_chrome_installer.exe",
-				"https://edgedl.me.gvt1.com/edgedl/release2/chrome/acerbjgcqxawfznuerhowwbwv36a_124.0.6367.156/124.0.6367.156_chrome_installer.exe",
-				"http://dl.google.com/release2/chrome/acerbjgcqxawfznuerhowwbwv36a_124.0.6367.156/124.0.6367.156_chrome_installer.exe",
-				"https://dl.google.com/release2/chrome/acerbjgcqxawfznuerhowwbwv36a_124.0.6367.156/124.0.6367.156_chrome_installer.exe",
-				"http://www.google.com/dl/release2/chrome/acerbjgcqxawfznuerhowwbwv36a_124.0.6367.156/124.0.6367.156_chrome_installer.exe",
-				"https://www.google.com/dl/release2/chrome/acerbjgcqxawfznuerhowwbwv36a_124.0.6367.156/124.0.6367.156_chrome_installer.exe",
-			},
-			ok: true,
+			want: "https?://[a-zA-Z0-9/\\.-]+_[0-9\\.]+/[a-zA-Z0-9/\\.-]+_chrome_installer\\.(exe|msi)",
+			ok:   true,
 		},
 		{
-			description: "Unknown Prams",
+			description: "Unknown parameters",
 			input: App{
 				Appid: "foo",
 				Ap:    "bar",
 			},
-			want: nil,
-			ok:   false,
+			ok: false,
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.description, func(t *testing.T) {
+			var wantPattern *regexp.Regexp
+			var err error
+			if tc.ok {
+				wantPattern, err = regexp.Compile(tc.want)
+				if err != nil {
+					t.Fatalf("unexpected error happened: %v", err)
+				}
+			}
+
 			resp, err := PostGoogleAPI(Os{
 				Platform:     "win",
 				Version:      "10",
@@ -88,13 +80,8 @@ func TestPostGoogleAPI(t *testing.T) {
 			if !tc.ok {
 				t.Fatalf("expected error did not happen")
 			}
-
-			dictComp := func(a string, b string) bool {
-				return strings.Compare(a, b) == -1
-			}
-
-			if diff := cmp.Diff(tc.want, urls, cmpopts.SortSlices(dictComp)); diff != "" {
-				t.Errorf("wrong result: %s", diff)
+			if slices.ContainsFunc(urls, func(u string) bool { return !wantPattern.MatchString(u) }) {
+				t.Errorf("returned urls contain unexpected pattern: %v", urls)
 			}
 		})
 	}

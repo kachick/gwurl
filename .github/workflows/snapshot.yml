@@ -1,0 +1,64 @@
+name: 📸
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    paths-ignore:
+      - '**.md'
+  schedule:
+    # Every 10:42 JST
+    # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
+    - cron: '42 1 * * *'
+  workflow_dispatch:
+
+jobs:
+  bump_snapshot:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Needed to get commit counts
+          # https://stackoverflow.com/a/65056108
+          fetch-depth: 0
+      - name: Prepare Git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Prepare Git branch
+        id: prepare-branch
+        run: |
+          pr_branch="${{ github.sha }}-$(date +%Y%m%d-%H%M%S)"
+          git switch -c "${pr_branch}"
+          echo pr_branch="$pr_branch" | tee -a "$GITHUB_OUTPUT"
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: 'go.mod'
+          cache-dependency-path: 'go.sum'
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: '3.36.0' # selfup {"extract":"\\d\\.\\d+\\.\\d+","replacer":["task", "--version"], "nth": 3}
+      - run: |
+          task snapshot | tee -a snapshot.txt
+      - name: Update related CI dependencies
+        run: |
+          git diff-index --quiet HEAD || git commit -m 'Update snapshots' snapshot.txt
+      - name: Count added commits
+        id: count-commits
+        run: |
+          count="$(git rev-list --count origin/${{ github.event.repository.default_branch }}..)"
+          echo "count=${count}" | tee -a "$GITHUB_OUTPUT"
+      - name: Push branch
+        run: git push origin '${{ steps.prepare-branch.outputs.pr_branch }}'
+        if: github.event_name != 'pull_request' && (steps.count-commits.outputs.count > 0)
+      - name: Create PR
+        if: github.event_name != 'pull_request' && (steps.count-commits.outputs.count > 0)
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          gh pr create --base '${{ github.event.repository.default_branch }}' --title 'Update snapshots' --body 'Update snapshots'
