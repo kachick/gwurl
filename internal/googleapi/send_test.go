@@ -41,12 +41,12 @@ func TestPostGoogleAPI(t *testing.T) {
 				Ap:    "x64-stable-statsdef_1",
 			},
 			want: []string{
-				"http://edgedl.me.gvt1.com/edgedl/release2/chrome/adno2uyj7yhsdmrqsizskbq3um2q_122.0.6261.129/122.0.6261.129_chrome_installer.exe",
-				"https://edgedl.me.gvt1.com/edgedl/release2/chrome/adno2uyj7yhsdmrqsizskbq3um2q_122.0.6261.129/122.0.6261.129_chrome_installer.exe",
-				"http://dl.google.com/release2/chrome/adno2uyj7yhsdmrqsizskbq3um2q_122.0.6261.129/122.0.6261.129_chrome_installer.exe",
-				"https://dl.google.com/release2/chrome/adno2uyj7yhsdmrqsizskbq3um2q_122.0.6261.129/122.0.6261.129_chrome_installer.exe",
-				"http://www.google.com/dl/release2/chrome/adno2uyj7yhsdmrqsizskbq3um2q_122.0.6261.129/122.0.6261.129_chrome_installer.exe",
-				"https://www.google.com/dl/release2/chrome/adno2uyj7yhsdmrqsizskbq3um2q_122.0.6261.129/122.0.6261.129_chrome_installer.exe",
+				"http://edgedl.me.gvt1.com/edgedl/release2/chrome/acerbjgcqxawfznuerhowwbwv36a_124.0.6367.156/124.0.6367.156_chrome_installer.exe",
+				"https://edgedl.me.gvt1.com/edgedl/release2/chrome/acerbjgcqxawfznuerhowwbwv36a_124.0.6367.156/124.0.6367.156_chrome_installer.exe",
+				"http://dl.google.com/release2/chrome/acerbjgcqxawfznuerhowwbwv36a_124.0.6367.156/124.0.6367.156_chrome_installer.exe",
+				"https://dl.google.com/release2/chrome/acerbjgcqxawfznuerhowwbwv36a_124.0.6367.156/124.0.6367.156_chrome_installer.exe",
+				"http://www.google.com/dl/release2/chrome/acerbjgcqxawfznuerhowwbwv36a_124.0.6367.156/124.0.6367.156_chrome_installer.exe",
+				"https://www.google.com/dl/release2/chrome/acerbjgcqxawfznuerhowwbwv36a_124.0.6367.156/124.0.6367.156_chrome_installer.exe",
 			},
 			ok: true,
 		},
@@ -70,7 +70,7 @@ func TestPostGoogleAPI(t *testing.T) {
 			}, tc.input)
 			if err != nil {
 				if tc.ok {
-					t.Fatalf("unexpected error happned: %v", err)
+					t.Fatalf("unexpected error happened: %v", err)
 				} else {
 					return
 				}
@@ -79,7 +79,7 @@ func TestPostGoogleAPI(t *testing.T) {
 			urls, err := GetPermalinks(resp)
 			if err != nil {
 				if tc.ok {
-					t.Fatalf("unexpected error happned: %v", err)
+					t.Fatalf("unexpected error happened: %v", err)
 				} else {
 					return
 				}

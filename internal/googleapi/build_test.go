@@ -15,7 +15,7 @@ func TestBuildGoogleApiPostXml(t *testing.T) {
 			Ap:    "external-stable-universal",
 		})
 		if err != nil {
-			t.Fatalf("unexpected error happned: %+v", err)
+			t.Fatalf("unexpected error happened: %+v", err)
 		}
 	})
 }

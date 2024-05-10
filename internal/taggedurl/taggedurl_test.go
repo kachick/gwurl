@@ -57,7 +57,7 @@ func TestParseTaggedURL(t *testing.T) {
 
 			if err != nil {
 				if tc.ok {
-					t.Fatalf("unexpected error happned: %v", err)
+					t.Fatalf("unexpected error happened: %v", err)
 				} else {
 					return
 				}
