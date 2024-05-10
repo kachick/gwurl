@@ -45,7 +45,8 @@ jobs:
           version: '3.36.0' # selfup {"extract":"\\d\\.\\d+\\.\\d+","replacer":["task", "--version"], "nth": 3}
       - run: |
           task snapshot | tee snapshot.txt
-      - name: Update related CI dependencies
+      - name: Commit if updated
+        continue-on-error: true
         run: |
           git diff-index --quiet HEAD || git commit -m 'Update snapshots' snapshot.txt
       - name: Count added commits
