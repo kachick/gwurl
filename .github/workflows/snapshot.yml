@@ -20,6 +20,6 @@ jobs:
       - name: Install Task
         uses: arduino/setup-task@v2
         with:
-          version: '3.42.42' # selfup {"extract":"\\d\\.\\d+\\.\\d+","replacer":["task", "--version"], "nth": 3}
+          version: '3.36.0' # selfup {"extract":"\\d\\.\\d+\\.\\d+","replacer":["task", "--version"], "nth": 3}
       - run: |
           task snapshot | tee -a snapshot.txt
