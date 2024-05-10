@@ -1,0 +1,14 @@
+Given Tagged URL Inspection: {Appguid:{DDCCD2A9-025E-4142-BCEB-F467B88CF830} Ap:external-stable-universal Appname:Google 日本語入力 Needsadmin:true Filename:GoogleJapaneseInputSetup.exe}
+http://dl.google.com/release2/kjspmop3m4hu2sbbaotsynsgja_2.29.5370.0/GoogleJapaneseInput64-2.29.5370.0.msi
+http://edgedl.me.gvt1.com/edgedl/release2/kjspmop3m4hu2sbbaotsynsgja_2.29.5370.0/GoogleJapaneseInput64-2.29.5370.0.msi
+http://www.google.com/dl/release2/kjspmop3m4hu2sbbaotsynsgja_2.29.5370.0/GoogleJapaneseInput64-2.29.5370.0.msi
+https://dl.google.com/release2/kjspmop3m4hu2sbbaotsynsgja_2.29.5370.0/GoogleJapaneseInput64-2.29.5370.0.msi
+https://edgedl.me.gvt1.com/edgedl/release2/kjspmop3m4hu2sbbaotsynsgja_2.29.5370.0/GoogleJapaneseInput64-2.29.5370.0.msi
+https://www.google.com/dl/release2/kjspmop3m4hu2sbbaotsynsgja_2.29.5370.0/GoogleJapaneseInput64-2.29.5370.0.msi
+Given Tagged URL Inspection: {Appguid:{8A69D345-D564-463C-AFF1-A69D9E530F96} Ap:x64-statsdef_1 Appname:Google Chrome Needsadmin:false Filename:ChromeSetup.exe}
+http://dl.google.com/release2/chrome/otx34hyrrolsissgqvrxz24gzq_124.0.6367.202/124.0.6367.202_chrome_installer.exe
+http://edgedl.me.gvt1.com/edgedl/release2/chrome/otx34hyrrolsissgqvrxz24gzq_124.0.6367.202/124.0.6367.202_chrome_installer.exe
+http://www.google.com/dl/release2/chrome/otx34hyrrolsissgqvrxz24gzq_124.0.6367.202/124.0.6367.202_chrome_installer.exe
+https://dl.google.com/release2/chrome/otx34hyrrolsissgqvrxz24gzq_124.0.6367.202/124.0.6367.202_chrome_installer.exe
+https://edgedl.me.gvt1.com/edgedl/release2/chrome/otx34hyrrolsissgqvrxz24gzq_124.0.6367.202/124.0.6367.202_chrome_installer.exe
+https://www.google.com/dl/release2/chrome/otx34hyrrolsissgqvrxz24gzq_124.0.6367.202/124.0.6367.202_chrome_installer.exe
