@@ -18,7 +18,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Set up Go
@@ -28,7 +28,7 @@ jobs:
           cache-dependency-path: 'go.sum'
       - run: go build -v -race ./...
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Set up Go
@@ -38,7 +38,7 @@ jobs:
           cache-dependency-path: 'go.sum'
       - run: go test ./...
   lint:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Set up Go
