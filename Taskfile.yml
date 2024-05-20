@@ -25,10 +25,12 @@ tasks:
   fmt:
     cmds:
       - dprint fmt
+      - yamlfmt .
       - nixpkgs-fmt ./*.nix
   lint:
     cmds:
       - dprint check
+      - yamlfmt -lint .
       - typos . .github .vscode
       - nixpkgs-fmt --check ./*.nix
   snapshot:
@@ -41,5 +43,6 @@ tasks:
       - nil --version
       - task --version
       - dprint --version
+      - yamlfmt -version
       - typos --version
       - go version
