@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  bump_snapshot:
+  bump:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -44,11 +44,11 @@ jobs:
         with:
           version: '3.37.2' # selfup {"extract":"\\d\\.\\d+\\.\\d+","replacer":["task", "--version"], "nth": 3}
       - run: |
-          task snapshot | tee snapshot.txt
+          task snapshot
       - name: Commit if updated
         continue-on-error: true
         run: |
-          git diff-index --quiet HEAD || git commit -m 'Update snapshots' snapshot.txt
+          git diff-index --quiet HEAD || git commit -m 'Update snapshots' snapshots
       - name: Count added commits
         id: count-commits
         run: |
