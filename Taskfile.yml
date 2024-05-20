@@ -35,8 +35,8 @@ tasks:
       - nixpkgs-fmt --check ./*.nix
   snapshot:
     cmds:
-      - go run ./cmd/gwurl 'https://dl.google.com/tag/s/appguid%3D%7BDDCCD2A9-025E-4142-BCEB-F467B88CF830%7D%26iid%3D%7BBF6725E7-4A15-87B7-24D5-0ADABEC753EE%7D%26lang%3Dja%26browser%3D4%26usagestats%3D0%26appname%3DGoogle%2520%25E6%2597%25A5%25E6%259C%25AC%25E8%25AA%259E%25E5%2585%25A5%25E5%258A%259B%26needsadmin%3Dtrue%26ap%3Dexternal-stable-universal/japanese-ime/GoogleJapaneseInputSetup.exe' | sort
-      - go run ./cmd/gwurl 'https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B69ED4A6C-1B6F-4C8F-9298-FC4A61FC55C4%7D%26lang%3Dja%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-statsdef_1%26installdataindex%3Dempty/update2/installers/ChromeSetup.exe' | sort
+      - go run ./cmd/gwurl 'https://dl.google.com/tag/s/appguid%3D%7BDDCCD2A9-025E-4142-BCEB-F467B88CF830%7D%26iid%3D%7BBF6725E7-4A15-87B7-24D5-0ADABEC753EE%7D%26lang%3Dja%26browser%3D4%26usagestats%3D0%26appname%3DGoogle%2520%25E6%2597%25A5%25E6%259C%25AC%25E8%25AA%259E%25E5%2585%25A5%25E5%258A%259B%26needsadmin%3Dtrue%26ap%3Dexternal-stable-universal/japanese-ime/GoogleJapaneseInputSetup.exe' | sort | tee ./snapshots/JapaneseIME.txt
+      - go run ./cmd/gwurl 'https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7B69ED4A6C-1B6F-4C8F-9298-FC4A61FC55C4%7D%26lang%3Dja%26browser%3D3%26usagestats%3D0%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-statsdef_1%26installdataindex%3Dempty/update2/installers/ChromeSetup.exe' | tee ./snapshots/Chrome.txt
   deps:
     cmds:
       - nix --version
