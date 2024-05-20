@@ -31,6 +31,7 @@
               edge-pkgs.nil
               edge-pkgs.nixpkgs-fmt
               edge-pkgs.dprint
+              edge-pkgs.yamlfmt
               edge-pkgs.typos
               edge-pkgs.go-task
               edge-pkgs.go_1_22
