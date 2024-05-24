@@ -9,17 +9,22 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        updaterVersion =
-          if (self ? shortRev)
-          then self.shortRev
-          else "dev";
+        updaterVersion = if (self ? shortRev) then self.shortRev else "dev";
       in
       rec {
-        devShells.default = with pkgs;
+        formatter = pkgs.nixfmt-rfc-style;
+        devShells.default =
+          with pkgs;
           mkShell {
             buildInputs = [
               # https://github.com/NixOS/nix/issues/730#issuecomment-162323824
@@ -27,7 +32,7 @@
               bashInteractive
 
               nil
-              nixpkgs-fmt
+              nixfmt-rfc-style
               dprint
               yamlfmt
               typos
