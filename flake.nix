@@ -34,7 +34,6 @@
               nil
               nixfmt-rfc-style
               dprint
-              yamlfmt
               typos
               go-task
               go_1_22
