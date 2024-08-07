@@ -19,11 +19,15 @@ var (
 )
 
 func main() {
+	taggedUrlFlag := flag.String("url", ":)", "parsing target")
+	appidFlag := flag.String("app-id", "{GUID}", "print the version of this program")
+	appVerflag := flag.String("app-version", "42.0.42", "print the version of this program")
 	versionFlag := flag.Bool("version", false, "print the version of this program")
 
 	const usage = `Usage: gwurl [OPTIONS] [URL]
 
-$ gwurl "$Windows_Installer_URL_That_Provided_By_Google"
+$ gwurl --url "$Windows_Installer_URL_That_Provided_By_Google"
+$ gwurl app-id 'DDCCD2A9-025E-4142-BCEB-F467B88CF830'
 $ gwurl --version
 `
 
@@ -50,7 +54,8 @@ $ gwurl --version
 		return
 	}
 
-	taggedUrl := os.Args[1]
+	taggedUrl := *taggedUrlFlag
+	if taggedUrl != ""
 	parsed, err := taggedurl.ParseTaggedURL(taggedUrl)
 	if err != nil {
 		log.Fatalf("Cannot parse given URL: %+v", err)
