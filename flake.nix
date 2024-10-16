@@ -36,11 +36,11 @@
               dprint
               typos
               go-task
-              go_1_22
+              go_1_23
             ];
           };
 
-        packages.gwurl = pkgs.buildGo122Module {
+        packages.gwurl = pkgs.buildGo123Module {
           pname = "gwurl";
           version = updaterVersion;
           src = pkgs.lib.cleanSource self;
