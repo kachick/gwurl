@@ -4,6 +4,9 @@
 [![CI - E2E Status](https://github.com/kachick/gwurl/actions/workflows/ci-googleapi.yml/badge.svg?branch=main)](https://github.com/kachick/gwurl/actions/workflows/ci-googleapi.yml?query=branch%3Amain+)
 [![CI - Nix Status](https://github.com/kachick/gwurl/actions/workflows/ci-nix.yml/badge.svg?branch=main)](https://github.com/kachick/gwurl/actions/workflows/ci-nix.yml?query=branch%3Amain+)
 
+This repository has been archibed.
+I may reopen this repository again for very personal use, however I don't need to maintain for now.
+
 ## Usage
 
 ```console
@@ -54,10 +57,3 @@ Using their API without any token auth and referenced these OSS resources.
 - https://github.com/google/omaha/blob/c97bc28a89fa0d9863a7e9089c37357eb854e8de/doc/TaggedMetainstallers.md?plain=1#L11-L21
 - https://github.com/google/omaha/blob/c97bc28a89fa0d9863a7e9089c37357eb854e8de/doc/ServerProtocolV2.md?plain=1#L21
 - https://github.com/SpecterShell/Dumplings/blob/26a3b4f359a0fb524dc9f30dc5ae924c0f723f8a/Tasks/Google.Chrome/Script.ps1
-
-## Plans
-
-Current features are enough to me, but it would be good...
-
-- Output as JSON: For automated GitHub Actions to create PRs for winget-pkgs
-- Returns supported minimum Windows Versions: Also helps to create winget-pkgs
